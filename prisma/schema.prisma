@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model userdata_tb {
+  full_name           String?   @db.VarChar(60)
+  username            String?   @db.VarChar(72)
+  password            String    @db.VarChar(100)
+  role_id             String?   @db.VarChar(36)
+  role_name           String?   @db.VarChar(36)
+  firstname           String?   @db.VarChar(60)
+  lastname            String?   @db.VarChar(60)
+  business_name       String?
+  dob                 DateTime? @db.DateTime(0)
+  confirm_pin         String?   @db.VarChar(8)
+  email               String    @unique(map: "email") @db.VarChar(100)
+  mobile_phone        String?   @default("000 000 0000") @db.VarChar(20)
+  address             String?
+  passchg_logon       String?   @db.Char(1)
+  pass_expire         String?   @default("") @db.VarChar(1)
+  pass_dateexpire     DateTime? @db.DateTime(0)
+  pass_change         String?   @db.Char(1)
+  user_disabled       String?   @default("0") @db.Char(1)
+  user_locked         String?   @default("0") @db.Char(1)
+  last_seen           String?   @db.VarChar(32)
+  day_1               String?   @default("1") @db.Char(1)
+  ID_Image_url        String?   @default("1") @db.Char(1)
+  id_number           String?   @default("1") @db.Char(1)
+  org_name            String?   @db.VarChar(128)
+  means_of_ID         String?   @default("1") @db.Char(1)
+  city                String?   @default("1") @db.Char(1)
+  state               String?   @default("1") @db.Char(1)
+  nationality         String?   @default("1") @db.Char(1)
+  pin_missed          Int?      @default(0)
+  last_used           DateTime? @db.DateTime(0)
+  modified            DateTime? @db.DateTime(0)
+  hint_question       String?   @db.VarChar(100)
+  hint_answer         String?   @db.VarChar(100)
+  override_wh         String?   @db.Char(1)
+  extend_wh           String?   @db.VarChar(17)
+  created             DateTime? @db.DateTime(0)
+  posted_user         String?   @db.VarChar(100)
+  last_used_passwords String?   @db.VarChar(250)
+  confirm_code        String?   @db.VarChar(128)
+  confirm_account     String?   @default("0") @db.VarChar(1)
+  business_status     String    @default("NotVerified")
+  user_id             String    @unique(map: "user_id") @db.VarChar(128)
+  passport            String?   @db.VarChar(255)
+  referral_code       String?   @db.VarChar(16)
+  status              Int?      @default(1)
+  merchantId          String    @default(uuid()) @db.Char(36)
+  waddress            String?   @default("") @db.VarChar(128)
+  app                 String?   @db.VarChar(16)
+  email_auth          Int?      @default(0)
+  resetpassword       String?   @db.VarChar(128)
+  resettime           DateTime? @db.DateTime(0)
+  reset_token         String?
+  reset_token_expiry  DateTime? @db.DateTime(0)
+  team_id             String?   @db.Char(36)
+  country             String?   @default("") @db.VarChar(36)
+  last_activity       DateTime? @db.DateTime(0)
+  otp_enabled         String?   @default("0") @db.VarChar(1)
+  otp_verified        String?   @db.VarChar(12)
+  otp_expiry          DateTime? @db.DateTime(0)
+  otp_ascii           String?   @db.VarChar(128)
+  otp_hex             String?   @db.VarChar(128)
+  otp_base32          String?   @db.VarChar(128)
+  otp_auth_url        String?   @db.VarChar(256)
+  profilePic          String?
+  pk_live             String?   @db.VarChar(72)
+  sk_live             String?   @db.VarChar(72)
+  pk_test             String?   @db.VarChar(36)
+  sk_test             String?   @db.VarChar(36)
+  isExpired           Boolean   @default(false)
+  webhook_url         String?
+  secret_key          String?
+  blacklist           String?   @default("False")
+  email_notification  String?
+}
+
+model Item {
+  user_id           String  @db.VarChar(128)
+  item_id           String  @id @default(uuid()) @db.Char(36)
+  title             String  @db.VarChar(255)
+  description       String  @db.Text
+  email             String? @db.VarChar(100)
+  phone_no_1        String  @db.VarChar(20)
+  phone_no_2        String? @db.VarChar(20)
+  primary_image_url String? @db.VarChar(255) // Denormalized field
+  cart              Int?    @default(0)
+
+  images Image[]
+
+  @@index([user_id])
+}
+
+model Image {
+  image_id  String @id @default(uuid()) @db.Char(36)
+  item_id   String @db.Char(36)
+  image_url String @db.VarChar(255)
+  post      Item   @relation(fields: [item_id], references: [item_id])
+
+  @@index([item_id])
+}
+
+model Cart {
+  cart_id Int    @id @default(autoincrement())
+  user_id String @db.VarChar(128)
+  item_id String @db.Char(36)
+
+  @@index([user_id, item_id])
+}
+
+model url {
+  id       Int    @id @default(autoincrement())
+  longUrl  String
+  shortUrl String @unique
+  user_id  String @db.VarChar(128)
+}
