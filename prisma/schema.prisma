@@ -91,10 +91,9 @@ model Item {
   email             String? @db.VarChar(100)
   phone_no_1        String  @db.VarChar(20)
   phone_no_2        String? @db.VarChar(20)
-  primary_image_url String? @db.VarChar(255) // Denormalized field
+  primary_image_url String? @db.VarChar(255)
   cart              Int?    @default(0)
-
-  images Image[]
+  images            Image[]
 
   @@index([user_id])
 }
