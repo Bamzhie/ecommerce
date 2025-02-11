@@ -103,7 +103,7 @@ model Image {
   image_id  String @id @default(uuid()) @db.Char(36)
   item_id   String @db.Char(36)
   image_url String @db.VarChar(255)
-  post      Item   @relation(fields: [item_id], references: [item_id])
+  post      Item   @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
 
   @@index([item_id])
 }

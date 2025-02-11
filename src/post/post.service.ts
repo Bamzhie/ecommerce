@@ -135,6 +135,45 @@ export class PostService {
     }
   }
 
+  async deletePost(userId: string, postId: string) {
+    try {
+      const post = await this.prismaService.item.findFirst({
+        where: {
+          user_id: userId,
+          item_id: postId,
+        },
+      });
+
+      if (!post) {
+        return {
+          statusCode: '01',
+          status: 'Failed',
+          message: 'Post not found',
+        };
+      }
+
+      await this.prismaService.item.delete({
+        where: {
+          item_id: postId,
+          user_id: userId,
+        },
+      });
+
+      return {
+        statusCode: '01',
+        status: 'Success',
+        message: 'Post deleted successfully',
+      };
+    } catch (error) {
+      return {
+        statusCode: '01',
+        status: 'Failed',
+        message: 'Failed to delete post',
+        error: `${error.message}`,
+      };
+    }
+  }
+
   async addToCart(userId: string, itemId: string) {
     try {
       const item = await this.prismaService.item.findFirst({

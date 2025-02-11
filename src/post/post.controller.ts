@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -44,6 +45,11 @@ export class PostController {
   @Get('user')
   async getUserPost(@GetUser() userId) {
     return this.postService.getUserPost(userId.user_id);
+  }
+
+  @Delete('delete/:item_id')
+  async deletePost(@Param('item_id') postId: string, @GetUser() userId) {
+    return this.postService.deletePost(userId.user_id, postId);
   }
 
   @Post('add-cart/:item_id')
